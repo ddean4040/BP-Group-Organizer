@@ -84,9 +84,9 @@ class Walker_Group_Edit extends Walker_Group  {
 					<span class="item-title"><?php echo esc_html( $item->name ); ?></span>
 					<span class="item-controls">
 						<span class="item-type"><?php echo esc_html( $item->slug ); ?></span>
-						<a class="item-edit" id="edit-<?php echo $item_id; ?>" title="<?php _e('Edit Menu Item'); ?>" href="<?php
+						<a class="item-edit" id="edit-<?php echo $item_id; ?>" title="<?php _e('Edit Group', 'bp-group-organizer' ); ?>" href="<?php
 							echo ( isset( $_GET['edit-menu-item'] ) && $item_id == $_GET['edit-menu-item'] ) ? admin_url( 'nav-menus.php' ) : add_query_arg( 'edit-menu-item', $item_id, remove_query_arg( $removed_args, admin_url( 'nav-menus.php#menu-item-settings-' . $item_id ) ) );
-						?>"><?php _e( 'Edit Menu Item' ); ?></a>
+						?>"><?php _e( 'Edit Group', 'bp-group-organizer' ); ?></a>
 					</span>
 				</dt>
 			</dl>
@@ -94,32 +94,34 @@ class Walker_Group_Edit extends Walker_Group  {
 			<div class="menu-item-settings" id="menu-item-settings-<?php echo $item_id; ?>">
 				<p class="description description-thin">
 					<label for="group-name-<?php echo $item_id; ?>">
-						<?php _e( 'Group Name' ); ?><br />
+						<?php _e( 'Group Name', 'bp-group-organizer' ); ?><br />
 						<input type="text" id="group-name-<?php echo $item_id; ?>" class="widefat edit-menu-item-title" name="group[<?php echo $item_id; ?>][name]" value="<?php echo esc_attr( $item->name ); ?>" />
 					</label>
 				</p>
 				<p class="description description-thin">
 					<label for="group-slug-<?php echo $item_id; ?>">
-						<?php _e( 'Group Slug' ); ?><br />
+						<?php _e( 'Group Slug', 'bp-group-organizer' ); ?><br />
 						<input type="text" id="group-slug-<?php echo $item_id; ?>" class="widefat edit-menu-item-attr-title" name="group[<?php echo $item_id; ?>][slug]" value="<?php echo esc_attr( $item->slug ); ?>" />
 					</label>
 				</p>
 				<p class="field-description description description-wide">
 					<label for="group-description-<?php echo $item_id; ?>">
-						<?php _e( 'Description' ); ?><br />
+						<?php _e( 'Group Description', 'bp-group-organizer' ); ?><br />
 						<textarea id="group-description-<?php echo $item_id; ?>" class="widefat edit-menu-item-description" rows="3" cols="20" name="group[<?php echo $item_id; ?>][description]"><?php echo esc_html( $item->description ); // textarea_escaped ?></textarea>
 						<span class="description"><?php _e('Enter a brief description for this group.'); ?></span>
 					</label>
 				</p>
+				<?php if ( bp_is_active( 'forums' ) && ( function_exists( 'bp_forums_is_installed_correctly' ) && bp_forums_is_installed_correctly() ) ) : ?>
 				<p class="field-css-classes description description-wide">
 					<label for="group-forum-enabled-<?php echo $item_id; ?>">
-						<?php _e( 'Forum Enabled' ); ?><br />
+						<?php _e('Enable discussion forum', 'buddypress'); ?><br />
 						<input type="checkbox" id="group-forum-enabled-<?php echo $item_id; ?>" class="widefat edit-menu-item-classes" name="group[<?php echo $item_id; ?>][forum_enabled]" <?php checked($item->enable_forum) ?> />
 					</label>
 				</p>
+				<?php endif; ?>
 				<p class="field-link-target description description-thin">
 					<label for="group-status-<?php echo $item_id; ?>">
-						<?php _e( 'Group Status' ); ?><br />
+						<?php _e( 'Privacy Options', 'buddypress' ); ?><br />
 						<select id="group-status-<?php echo $item_id; ?>" class="widefat edit-menu-item-target" name="group[<?php echo $item_id; ?>][status]">
 							<?php foreach($bp->groups->valid_status as $status) : ?>
 							<option value="<?php echo $status ?>" <?php selected($item->status,$status) ?>><?php echo ucfirst($status) ?></option>
@@ -131,7 +133,7 @@ class Walker_Group_Edit extends Walker_Group  {
 				<?php if(defined('BP_GROUP_HIERARCHY_IS_INSTALLED') && method_exists('BP_Groups_Hierarchy','get_tree')) : ?>
 				<p class="field-xfn description description-thin">
 					<label for="group-parent-id-<?php echo $item_id; ?>">
-						<?php _e( 'Parent Group' ); ?><br />
+						<?php _e( 'Parent Group', 'bp-group-hierarchy' ); ?><br />
 						<select id="group-parent-id-<?php echo $item_id; ?>" class="widefat edit-menu-item-target" name="group[<?php echo $item_id; ?>][parent_id]">
 							<option value="0" <?php selected( $item->parent_id, 0) ?>><?php _e('Site Root','bp_group_hierarchy') ?></option>
 							<?php foreach($all_groups as $group) : ?>
@@ -160,7 +162,7 @@ class Walker_Group_Edit extends Walker_Group  {
 							remove_query_arg($removed_args, admin_url( 'admin.php?page=group_organizer' ) )
 						),
 						'delete-group_' . $item_id
-					); ?>"><?php _e('Delete Group'); ?></a> <span class="meta-sep"> | </span> <a class="item-cancel submitcancel" id="cancel-<?php echo $item_id; ?>" href="<?php	echo esc_url( add_query_arg( array('edit-menu-item' => $item_id, 'cancel' => time()), remove_query_arg( $removed_args, admin_url( 'nav-menus.php' ) ) ) );
+					); ?>"><?php _e('Delete Group', 'bp-group-organizer'); ?></a> <span class="meta-sep"> | </span> <a class="item-cancel submitcancel" id="cancel-<?php echo $item_id; ?>" href="<?php	echo esc_url( add_query_arg( array('edit-menu-item' => $item_id, 'cancel' => time()), remove_query_arg( $removed_args, admin_url( 'nav-menus.php' ) ) ) );
 						?>#menu-item-settings-<?php echo $item_id; ?>"><?php _e('Cancel'); ?></a>
 				</div>
 
@@ -266,49 +268,6 @@ function wp_save_nav_menu_items( $menu_id = 0, $menu_data = array() ) {
 }
 
 /**
- * Adds custom arguments to some of the meta box object types.
- *
- * @since 3.0.0
- *
- * @access private
- *
- * @param object $object The post type or taxonomy meta-object.
- * @return object The post type of taxonomy object.
- */
-function _wp_nav_menu_meta_box_object( $object = null ) {
-	if ( isset( $object->name ) ) {
-
-		if ( 'page' == $object->name ) {
-			$object->_default_query = array(
-				'orderby' => 'menu_order title',
-				'post_status' => 'publish',
-			);
-
-		// posts should show only published items
-		} elseif ( 'post' == $object->name ) {
-			$object->_default_query = array(
-				'post_status' => 'publish',
-			);
-
-		// cats should be in reverse chronological order
-		} elseif ( 'category' == $object->name ) {
-			$object->_default_query = array(
-				'orderby' => 'id',
-				'order' => 'DESC',
-			);
-
-		// custom post types should show only published items
-		} else {
-			$object->_default_query = array(
-				'post_status' => 'publish',
-			);
-		}
-	}
-
-	return $object;
-}
-
-/**
  * Returns the menu formatted to edit.
  * 
  * @return string|WP_Error $output The menu formatted to edit or error object on failure.
@@ -333,11 +292,11 @@ function bp_get_groups_to_edit() {
 
 	$result = '<div id="menu-instructions" class="post-body-plain';
 	$result .= ( ! empty($menu_items) ) ? ' menu-instructions-inactive">' : '">';
-	$result .= '<p>' . __('Add groups using the box to the left, or arrange groups below.') . '</p>';
+	$result .= '<p>' . __('Add groups using the box to the left, or arrange groups below.', 'bp-group-organizer' ) . '</p>';
 	$result .= '</div>';
 
 	if($groups_list['total'] == 0)
-		return $result . ' <ul class="menu" id="menu-to-edit"><li>No groups found.</li></ul>';
+		return $result . ' <ul class="menu" id="menu-to-edit"><li>' . __( 'No groups were found.', 'bp-group-organizer' ) . '</li></ul>';
 
 
 	if($groups_list['total'] != 0) {

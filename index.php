@@ -2,10 +2,11 @@
 /*
 Plugin Name: BP Group Organizer
 Plugin URI: http://www.generalthreat.com/projects/buddypress-group-organizer
-Version: 1.0
-Revision Date: 08/23/2011
+Description: Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
+Version: 1.0.1
+Revision Date: 09/14/2011
 Requires at least: PHP 5, WP 3.0, BuddyPress 1.2
-Tested up to: WP 3.2.1 , BuddyPress 1.5-beta-2
+Tested up to: WP 3.2.1 , BuddyPress 1.5-RC-1
 License: Example: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
 Author: David Dean
 Author URI: http://www.generalthreat.com/
@@ -14,14 +15,19 @@ Network: true
 */
 
 function bp_group_organizer_admin() {
-	$page = add_submenu_page( 'bp-general-settings', __('Group Organizer'), __('Group Organizer'), 'manage_options', 'group_organizer', 'bp_group_organizer_admin_page' );
+	$page = add_submenu_page( 'bp-general-settings', __('Group Organizer', 'bp-group-organizer'), __('Group Organizer', 'bp-group-organizer'), 'manage_options', 'group_organizer', 'bp_group_organizer_admin_page' );
 	add_action('admin_print_scripts-' . $page, 'bp_group_organizer_load_scripts');
 	add_action('admin_print_styles-' . $page, 'bp_group_organizer_load_styles');
 }
 
-add_action( 'network_admin_menu', 'bp_group_organizer_admin' );
-add_action( 'admin_menu', 'bp_group_organizer_admin', 11 );	// fix issue with BP 1.2 and admin URL
-add_action( 'admin_init', 'bp_group_organizer_register_scripts' );
+function bp_group_organizer_register_admin() {
+
+	add_action( 'network_admin_menu', 'bp_group_organizer_admin' );
+	add_action( 'admin_menu', 'bp_group_organizer_admin' );	// fix issue with BP 1.2 and admin URL
+	add_action( 'admin_init', 'bp_group_organizer_register_scripts' );
+
+}
+add_action( 'bp_include', 'bp_group_organizer_register_admin' );
 
 function bp_group_organizer_register_scripts() {
 	wp_register_script( 'group-organizer', plugins_url( 'js/group-organizer.js', __FILE__ ), array('jquery') );
@@ -49,9 +55,9 @@ function bp_group_organizer_load_scripts() {
 function bp_group_organizer_translate_script() {
 	return array(
 		'noResultsFound'	=> _x('No results found.', 'search results'),
-		'warnDeleteGroup'	=> __( "You are about to permanently delete this group. \n 'Cancel' to stop, 'OK' to delete." ),
-		'groupDeleted'		=> __('Group was deleted successfully.'),
-		'groupDeleteFailed'	=> __('Group could not be deleted.'),
+		'warnDeleteGroup'	=> __( "You are about to permanently delete this group. \n 'Cancel' to stop, 'OK' to delete.", 'bp-group-organizer'),
+		'groupDeleted'		=> __('Group was deleted successfully.', 'bp-group-organizer'),
+		'groupDeleteFailed'	=> __('Group could not be deleted.', 'bp-group-organizer'),
 		'saveAlert' 		=> __('The changes you made will be lost if you navigate away from this page.'),
 	);
 }
@@ -99,16 +105,16 @@ function bp_group_organizer_admin_page() {
 			$group['date_created']	= date('Y-m-d H:i:s');
 	
 			if($group['slug'] != $_POST['group_slug']) {
-				$messages[] = '<div id="message" class="warning"><p>' . sprintf(__('The group slug you specified was unavailable or invalid. This group was created with the slug: <code>%s</code>.'),$group['slug']) . '</p></div>';
+				$messages[] = '<div id="message" class="warning"><p>' . sprintf(__('The group slug you specified was unavailable or invalid. This group was created with the slug: <code>%s</code>.', 'bp-group-organizer'),$group['slug']) . '</p></div>';
 			}
 			
 			$group_id = groups_create_group( $group );
 			if(!$group_id) {
 				$wpdb->show_errors();
 				$wpdb->print_error();
-				$messages[] = '<div id="message" class="error"><p>' . __('Group was not successfully created.') . '</p></div>';
+				$messages[] = '<div id="message" class="error"><p>' . __('Group was not successfully created.', 'bp-group-organizer') . '</p></div>';
 			} else {
-				$messages[] = '<div id="message" class="updated"><p>' . __('Group was created successfully.') . '</p></div>';
+				$messages[] = '<div id="message" class="updated"><p>' . __('Group was created successfully.', 'bp-group-organizer') . '</p></div>';
 			}
 			
 			groups_update_groupmeta( $group_id, 'total_member_count', 1);
@@ -264,10 +270,10 @@ $edit_markup = bp_get_groups_to_edit( );
 						<div id="submitpost" class="submitbox">
 							<div class="major-publishing-actions">
 								<label class="menu-name-label howto open-label" for="menu-name">
-									<span><?php _e('Group Organizer'); ?></span>
+									<span><?php _e('Group Organizer', 'bp-group-organizer'); ?></span>
 								</label>
 								<div class="publishing-action">
-									<?php submit_button( __( 'Save Groups' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_header' ) ); ?>
+									<?php submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_header' ) ); ?>
 								</div><!-- END .publishing-action -->
 							</div><!-- END .major-publishing-actions -->
 						</div><!-- END #submitpost .submitbox -->
@@ -287,7 +293,7 @@ $edit_markup = bp_get_groups_to_edit( );
 									echo  $edit_markup;
 							} else {
 								echo '<div class="post-body-plain">';
-								echo '<p>' . __('You don\'t yet have any groups.') . '</p>';
+								echo '<p>' . __('You don\'t yet have any groups.', 'bp-group-organizer') . '</p>';
 								echo '</div>';
 							}
 							?>
@@ -298,7 +304,7 @@ $edit_markup = bp_get_groups_to_edit( );
 						<div class="publishing-action">
 							<?php
 							if ( ! empty( $nav_menu_selected_id ) )
-								submit_button( __( 'Save Groups' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_footer' ) );
+								submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_footer' ) );
 							?>
 						</div>
 						</div>
