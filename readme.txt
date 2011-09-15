@@ -1,10 +1,10 @@
 === BP Group Organizer ===
 Contributors: ddean
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6BKDCMJRYPKNN&lc=US&item_name=GeneralThreat%20Development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6BKDCMJRYPKNN&lc=US&item_name=BP%20Group%20Organizer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: buddypress, group, groups, organize
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 
 Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
 
@@ -32,7 +32,7 @@ For users of BP Group Hierarchy, this plugin also allows you to move groups arou
 
 == Frequently Asked Questions ==
 
-First release! No questions yet.
+No questions yet.
 
 == Screenshots ==
 

@@ -14,6 +14,11 @@ Site Wide Only: true
 Network: true
 */
 
+//load localization files if present
+if ( file_exists( dirname( __FILE__ ) . '/languages/' . get_locale() . '.mo' ) )
+	load_textdomain( 'bp-group-organizer', dirname( __FILE__ ) . '/languages/' . get_locale() . '.mo' );
+
+
 function bp_group_organizer_admin() {
 	$page = add_submenu_page( 'bp-general-settings', __('Group Organizer', 'bp-group-organizer'), __('Group Organizer', 'bp-group-organizer'), 'manage_options', 'group_organizer', 'bp_group_organizer_admin_page' );
 	add_action('admin_print_scripts-' . $page, 'bp_group_organizer_load_scripts');
