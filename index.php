@@ -18,7 +18,7 @@ Network: true
 if( file_exists( dirname( __FILE__ ) . '/languages/' . dirname(plugin_basename(__FILE__)) . '-' . get_locale() . '.mo' ) ) {
 	load_plugin_textdomain( 'bp-group-organizer', false, dirname(plugin_basename(__FILE__)) . '/languages' );
 } else if ( file_exists( dirname( __FILE__ ) . '/languages/' . get_locale() . '.mo' ) ) {
-	_doing_it_wrong( 'load_textdomain', 'Please rename your translation files to use the ' . dirname(plugin_basename(__FILE__)) . '-' . get_locale() . '.mo' . ' format', '1.2.7' );
+	_doing_it_wrong( 'load_textdomain', 'Please rename your translation files to use the ' . dirname(plugin_basename(__FILE__)) . '-' . get_locale() . '.mo' . ' format', '1.0.2' );
 	load_textdomain( 'bp-group-organizer', dirname( __FILE__ ) . '/languages/' . get_locale() . '.mo' );
 }
 
