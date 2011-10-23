@@ -3,10 +3,10 @@
 Plugin Name: BP Group Organizer
 Plugin URI: http://www.generalthreat.com/projects/buddypress-group-organizer
 Description: Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
-Version: 1.0.2-testing
-Revision Date: 10/20/2011
+Version: 1.0.2
+Revision Date: 10/23/2011
 Requires at least: WP 3.0, BuddyPress 1.2
-Tested up to: WP 3.2.1 , BuddyPress 1.5.1
+Tested up to: WP 3.3-beta1 , BuddyPress 1.5.1
 License: Example: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
 Author: David Dean
 Author URI: http://www.generalthreat.com/
@@ -271,7 +271,7 @@ $edit_markup = bp_get_groups_to_edit( );
 		</form>
 	</div><!-- /#menu-settings-column -->
 	<div id="menu-management-liquid">
-		<div id="menu-management">
+		<div id="menu-management" class="nav-menus-php">
 			<div class="menu-edit">
 				<form id="update-nav-menu" action="" method="post" enctype="multipart/form-data">
 					<div id="nav-menu-header">
