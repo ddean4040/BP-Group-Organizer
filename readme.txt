@@ -68,6 +68,12 @@ No questions yet.
 
 == Upgrade Notice ==
 
+= 1.0.4 =
+Bug fix for groups with quotes in name or description
+
+= 1.0.3 =
+Bug fixes and group status indicator
+
 = 1.0.2 =
 Updated for WP 3.3 and with better translation support
 
