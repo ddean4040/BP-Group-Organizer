@@ -2,9 +2,9 @@
 Contributors: ddean
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6BKDCMJRYPKNN&lc=US&item_name=BP%20Group%20Organizer&currency_code=USD
 Tags: buddypress, group, groups, edit, organize, move, drag and drop
-Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 1.0.4
+Requires at least: 3.1
+Tested up to: 3.4.1
+Stable tag: 1.0.5
 
 Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
 

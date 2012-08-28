@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/bp-group-organizer\n"
-"POT-Creation-Date: 2012-03-24 19:46:01+00:00\n"
+"POT-Creation-Date: 2012-08-28 03:47:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -116,7 +116,7 @@ msgstr ""
 msgid "The Walker class named <strong>%s</strong> does not exist."
 msgstr ""
 
-#: index.php:26 index.php:220 index.php:242
+#: index.php:26 index.php:226 index.php:248
 msgid "Group Organizer"
 msgstr ""
 
@@ -161,18 +161,18 @@ msgstr ""
 msgid "Group was created successfully."
 msgstr ""
 
-#: index.php:245 index.php:273
+#: index.php:251 index.php:279
 msgid "Save Groups"
 msgstr ""
 
-#: index.php:264
+#: index.php:270
 msgid "You don't yet have any groups."
 msgstr ""
 
-#: index.php:291
-msgid "Not authorized to delete groups."
+#: index.php:297
+msgid "Only administrators can delete groups with the organizer."
 msgstr ""
 
-#: index.php:298
+#: index.php:305
 msgid "Group delete failed."
 msgstr ""

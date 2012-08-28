@@ -3,10 +3,10 @@
 Plugin Name: BP Group Organizer
 Plugin URI: http://www.generalthreat.com/projects/buddypress-group-organizer
 Description: Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
-Version: 1.0.4
-Revision Date: 03/24/2012
-Requires at least: WP 3.1, BuddyPress 1.2
-Tested up to: WP 3.3.1 , BuddyPress 1.5.4
+Version: 1.0.5
+Revision Date: 08/27/2012
+Requires at least: WP 3.1, BuddyPress 1.5
+Tested up to: WP 3.4.1 , BuddyPress 1.7-bleeding
 License: Example: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
 Author: David Dean
 Author URI: http://www.generalthreat.com/
@@ -109,9 +109,9 @@ function bp_group_organizer_admin_page() {
 			
 			$group['name']			= stripslashes( $_POST['group_name'] );
 			$group['description']	= stripslashes( $_POST['group_desc'] );
-			$group['slug']			= groups_check_slug($_POST['group_slug']);
+			$group['slug']			= groups_check_slug( $_POST['group_slug'] );
 			$group['status']		= $_POST['group_status'];
-			$group['enable_forum']	= isset($_POST['group_forum']) ? true : false;
+			$group['enable_forum']	= isset( $_POST['group_forum'] ) ? true : false;
 			$group['date_created']	= date('Y-m-d H:i:s');
 	
 			if($group['slug'] != $_POST['group_slug']) {
@@ -119,7 +119,7 @@ function bp_group_organizer_admin_page() {
 			}
 			
 			$group_id = groups_create_group( $group );
-			if(!$group_id) {
+			if( ! $group_id ) {
 				$wpdb->show_errors();
 				$wpdb->print_error();
 				$messages[] = '<div id="message" class="error"><p>' . __('Group was not successfully created.', 'bp-group-organizer') . '</p></div>';
@@ -129,10 +129,15 @@ function bp_group_organizer_admin_page() {
 			
 			groups_update_groupmeta( $group_id, 'total_member_count', 1);
 			
-			if(defined('BP_GROUP_HIERARCHY_IS_INSTALLED')) {
-				$group = new BP_Groups_Hierarchy( $group_id );
-				$group->parent_id	= (int)$_POST['group_parent'];
-				$group->save();
+			if( defined( 'BP_GROUP_HIERARCHY_IS_INSTALLED' ) ) {
+				$obj_group = new BP_Groups_Hierarchy( $group_id );
+				$obj_group->parent_id = (int)$_POST['group_parent'];
+				$obj_group->save();
+			}
+			
+			// Create the forum if enable_forum is checked, group forums are activated, and group does not already have a forum
+			if ( $group_id && $group['enable_forum'] && bp_is_active( 'forums' ) && ! groups_get_groupmeta( $group_id, 'forum_id' ) ) {
+				groups_new_group_forum( $group_id, $group['name'], $group['description'] );
 			}
 			
 			do_action( 'bp_group_organizer_save_new_group_options', $group_id );
@@ -188,12 +193,12 @@ function bp_group_organizer_admin_page() {
 					$group_reference->description = stripslashes( $group['description'] );
 					$attrs_changed[] = 'description';
 				}
-				if( $group['status'] != $group_reference->status && groups_is_valid_status($group['status']) ) {
+				if( $group['status'] != $group_reference->status && groups_is_valid_status( $group['status'] ) ) {
 					$group_reference->status = $group['status'];
 					$attrs_changed[] = 'status';
 				}
-				if( !isset($group['forum_enabled']) || $group['forum_enabled'] != $group_reference->enable_forum ) {
-					$group_reference->enable_forum = isset($group['forum_enabled']) ? true : false ;
+				if( ! isset( $group['forum_enabled'] ) || $group['forum_enabled'] != $group_reference->enable_forum ) {
+					$group_reference->enable_forum = isset( $group['forum_enabled'] ) ? true : false ;
 					$attrs_changed[] = 'enable_forum';
 				}
 				
@@ -202,6 +207,7 @@ function bp_group_organizer_admin_page() {
 				}
 				
 				// finally, let plugins run any other changes
+				do_action( 'group_details_updated', $group_reference->id );
 				do_action( 'bp_group_organizer_save_group_options', $group, $group_reference );
 				
 			}
@@ -288,14 +294,15 @@ function bp_organizer_delete_group() {
 	$group_id = (int)$_REQUEST['group_id'];
 	
 	if(!current_user_can('manage_options')) {
-		die(_('Not authorized to delete groups.','bp-group-organizer'));
+		die( __( 'Only administrators can delete groups with the organizer.', 'bp-group-organizer' ) );
 	}
 	check_ajax_referer('delete-group_' . $group_id);
 
 	if(groups_delete_group( $group_id )) {
-		die('success');
+		do_action( 'groups_group_deleted', $group_id );
+		die( 'success' );
 	}
-	die(__('Group delete failed.','bp-group-organizer'));
+	die( __( 'Group delete failed.', 'bp-group-organizer' ) );
 }
 
 add_action( 'wp_ajax_bp_organizer_delete-group', 'bp_organizer_delete_group' );
