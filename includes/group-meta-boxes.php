@@ -34,6 +34,11 @@ function add_group_meta_box() {
 			<?php _e('Enable discussion forum', 'buddypress'); ?>
 			<input id="group_forum" type="checkbox" name="group_forum" checked />
 		</label></p>
+		<?php elseif( function_exists('bbp_is_group_forums_active') && bbp_is_group_forums_active() ) : ?>
+		<p><label for="group_forum">
+			<?php _e('Enable bbPress discussion forum', 'buddypress'); ?>
+			<input id="group_forum" type="checkbox" name="group_forum" checked />
+		</label></p>
 		<?php endif; ?>
 		<p><label for="group_creator">
 			<?php _e('Group Creator', 'bp-group-organizer'); ?>
@@ -63,6 +68,7 @@ function add_group_meta_box() {
 	<p class="button-controls">
 		<img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
 		<?php submit_button( __( 'Add' ), 'primary', 'group-organizer-create', false ); ?>
+		<span class="spinner"></span>
 	</p>
 	<?php
 }

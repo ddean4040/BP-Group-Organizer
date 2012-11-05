@@ -40,6 +40,10 @@ No questions yet.
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed: group forums were not fully initialized for groups created in the Organizer - thanks, thosch
+* Changed: dropped BP 1.2 compatibility; no code was removed, but this release is not tested against BP 1.2
+
 = 1.0.4 =
 * Added: Group avatars displayed in the organizer
 * Changed: remove a bunch of legacy nav menu code; may improve speed for sites with lots of groups
@@ -67,6 +71,9 @@ No questions yet.
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Bug fix for group forums
 
 = 1.0.4 =
 Bug fix for groups with quotes in name or description

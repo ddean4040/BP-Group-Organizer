@@ -190,11 +190,9 @@ function bp_get_groups_to_edit() {
 		$groups_list = array(
 			'groups' => BP_Groups_Hierarchy::get_tree()
 		);
-		$groups_list['total'] = count($groups_list['groups']);
-	} else if(floatval(BP_VERSION) > 1.3) {
-		$groups_list = BP_Groups_Group::get('alphabetical');
+		$groups_list['total'] = count( $groups_list['groups'] );
 	} else {
-		$groups_list = BP_Groups_Group::get_alphabetically();
+		$groups_list = BP_Groups_Group::get( 'alphabetical' );
 	}
 	
 

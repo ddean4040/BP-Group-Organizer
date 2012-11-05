@@ -3,10 +3,10 @@
 Plugin Name: BP Group Organizer
 Plugin URI: http://www.generalthreat.com/projects/buddypress-group-organizer
 Description: Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
-Version: 1.0.5
-Revision Date: 08/27/2012
+Version: 1.0.6-testing
+Revision Date: 11/04/2012
 Requires at least: WP 3.1, BuddyPress 1.5
-Tested up to: WP 3.4.1 , BuddyPress 1.7-bleeding
+Tested up to: WP 3.5.2-beta2 , BuddyPress 1.7-bleeding
 License: Example: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
 Author: David Dean
 Author URI: http://www.generalthreat.com/
@@ -102,7 +102,9 @@ function bp_group_organizer_admin_page() {
 	
 	// Allowed actions: add, update, delete
 	$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'edit';
-
+	
+	$errored = false;
+	
 	switch ( $action ) {
 		case 'add-group':
 			check_admin_referer( 'add-group', 'group-settings-column-nonce' );
@@ -118,30 +120,79 @@ function bp_group_organizer_admin_page() {
 				$messages[] = '<div id="message" class="warning"><p>' . sprintf(__('The group slug you specified was unavailable or invalid. This group was created with the slug: <code>%s</code>.', 'bp-group-organizer'),$group['slug']) . '</p></div>';
 			}
 			
-			$group_id = groups_create_group( $group );
-			if( ! $group_id ) {
-				$wpdb->show_errors();
-				$wpdb->print_error();
-				$messages[] = '<div id="message" class="error"><p>' . __('Group was not successfully created.', 'bp-group-organizer') . '</p></div>';
-			} else {
-				$messages[] = '<div id="message" class="updated"><p>' . __('Group was created successfully.', 'bp-group-organizer') . '</p></div>';
+			if( empty( $group['name'] ) ) {
+				$messages[] = '<div id="message" class="error"><p>' . __( 'Group could not be created because one or more required fields were not filled in', 'bp-group-organizer' ) . '</p></div>';
+				$errored = true;
 			}
 			
-			groups_update_groupmeta( $group_id, 'total_member_count', 1);
-			
-			if( defined( 'BP_GROUP_HIERARCHY_IS_INSTALLED' ) ) {
-				$obj_group = new BP_Groups_Hierarchy( $group_id );
-				$obj_group->parent_id = (int)$_POST['group_parent'];
-				$obj_group->save();
+			if( ! $errored ) {
+				
+				$group_id = groups_create_group( $group );
+				
+				if( ! $group_id ) {
+					$wpdb->show_errors();
+					$wpdb->print_error();
+					$messages[] = '<div id="message" class="error"><p>' . __('Group was not successfully created.', 'bp-group-organizer') . '</p></div>';
+				} else {
+					$messages[] = '<div id="message" class="updated"><p>' . __('Group was created successfully.', 'bp-group-organizer') . '</p></div>';
+				}
 			}
 			
-			// Create the forum if enable_forum is checked, group forums are activated, and group does not already have a forum
-			if ( $group_id && $group['enable_forum'] && bp_is_active( 'forums' ) && ! groups_get_groupmeta( $group_id, 'forum_id' ) ) {
-				groups_new_group_forum( $group_id, $group['name'], $group['description'] );
+			if( ! empty( $group_id ) ) {
+				
+				groups_update_groupmeta( $group_id, 'total_member_count', 1);
+				
+				if( defined( 'BP_GROUP_HIERARCHY_IS_INSTALLED' ) ) {
+					$obj_group = new BP_Groups_Hierarchy( $group_id );
+					$obj_group->parent_id = (int)$_POST['group_parent'];
+					$obj_group->save();
+				}
+			
+				// Create the forum if enable_forum is checked
+				if ( $group['enable_forum'] ) {
+					
+					// Ensure group forums are activated, and group does not already have a forum
+					if( bp_is_active( 'forums' ) ) {
+						// Check for BuddyPress group forums
+						if( ! groups_get_groupmeta( $group_id, 'forum_id' ) ) {
+							groups_new_group_forum( $group_id, $group['name'], $group['description'] );
+						}
+					} else if ( function_exists('bbp_is_group_forums_active') && bbp_is_group_forums_active() ) {
+						// Check for bbPress group forums
+						if( count( bbp_get_group_forum_ids( $group_id ) ) == 0 ) {
+							
+							// Create the group forum - implementation from BBP_Forums_Group_Extension:create_screen_save
+							
+							// Set the default forum status
+							switch ( $group['status'] ) {
+								case 'hidden'  :
+									$status = bbp_get_hidden_status_id();
+									break;
+								case 'private' :
+									$status = bbp_get_private_status_id();
+									break;
+								case 'public'  :
+								default        :
+									$status = bbp_get_public_status_id();
+									break;
+							}
+			
+							// Create the initial forum
+							$forum_id = bbp_insert_forum( array(
+								'post_parent'  => bbp_get_group_forums_root_id(),
+								'post_title'   => $group['name'],
+								'post_content' => $group['description'],
+								'post_status'  => $status
+							) );
+							
+							bbp_add_forum_id_to_group( $group_id, $forum_id );
+							bbp_add_group_id_to_forum( $forum_id, $group_id );
+						}
+					}
+				}
+				
+				do_action( 'bp_group_organizer_save_new_group_options', $group_id );
 			}
-			
-			do_action( 'bp_group_organizer_save_new_group_options', $group_id );
-			
 			break;
 		case 'delete-group':
 			$group_id = (int) $_REQUEST['group_id'];
