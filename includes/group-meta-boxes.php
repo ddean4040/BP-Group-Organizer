@@ -34,9 +34,9 @@ function add_group_meta_box() {
 			<?php _e('Enable discussion forum', 'buddypress'); ?>
 			<input id="group_forum" type="checkbox" name="group_forum" checked />
 		</label></p>
-		<?php elseif( function_exists('bbp_is_group_forums_active') && bbp_is_group_forums_active() ) : ?>
+		<?php elseif( function_exists( 'bbp_is_group_forums_active' ) && bbp_is_group_forums_active() ) : ?>
 		<p><label for="group_forum">
-			<?php _e('Enable bbPress discussion forum', 'buddypress'); ?>
+			<?php _e('Enable bbPress discussion forum', 'bp-group-organizer'); ?>
 			<input id="group_forum" type="checkbox" name="group_forum" checked />
 		</label></p>
 		<?php endif; ?>

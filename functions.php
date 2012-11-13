@@ -12,4 +12,8 @@ if( ! function_exists( 'bp_group_avatar_micro' ) ) {
 	
 }
 
+function bpgo_is_hierarchy_available() {
+	return ( defined( 'BP_GROUP_HIERARCHY_IS_INSTALLED' ) && method_exists( 'BP_Groups_Hierarchy', 'get_tree' ) );
+}
+
 ?>

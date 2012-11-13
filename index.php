@@ -4,7 +4,7 @@ Plugin Name: BP Group Organizer
 Plugin URI: http://www.generalthreat.com/projects/buddypress-group-organizer
 Description: Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
 Version: 1.0.6-testing
-Revision Date: 11/04/2012
+Revision Date: 11/12/2012
 Requires at least: WP 3.1, BuddyPress 1.5
 Tested up to: WP 3.5.2-beta2 , BuddyPress 1.7-bleeding
 License: Example: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
@@ -32,6 +32,7 @@ function bp_group_organizer_register_admin() {
 
 	add_action( 'network_admin_menu', 'bp_group_organizer_admin' );
 	add_action( 'admin_menu', 'bp_group_organizer_admin' );	// fix issue with BP 1.2 and admin URL
+	add_action( 'admin_init', 'bp_group_organizer_handle_export' );
 	add_action( 'admin_init', 'bp_group_organizer_register_scripts' );
 
 }
@@ -263,6 +264,10 @@ function bp_group_organizer_admin_page() {
 				
 			}
 			break;
+		case 'import':
+			break;
+		case 'export':
+			break;
 	}
 	
 	// Ensure the user will be able to scroll horizontally
@@ -270,7 +275,17 @@ function bp_group_organizer_admin_page() {
 	global $_wp_nav_menu_max_depth;
 	$_wp_nav_menu_max_depth = 0;
 	
-	$edit_markup = bp_get_groups_to_edit( );
+	if( isset( $_REQUEST['screen'] ) && $_REQUEST['screen'] == 'import') {
+		$action = 'import';
+	} else {
+		$action = 'organize';
+	}
+	
+	if( $action == 'import') {
+		$edit_markup = bp_group_organizer_import_export_page();
+	} else {
+		$edit_markup = bp_get_groups_to_edit( );
+	}
 
 ?>
 <div class="wrap">
@@ -280,16 +295,39 @@ function bp_group_organizer_admin_page() {
 		echo $message . "\n";
 	endforeach;
 	?>
-	<div id="nav-menus-frame">
+	<div <?php if( $action == 'organize' ) echo 'id="nav-menus-frame"'; ?>>
 	<div id="menu-settings-column" class="metabox-holder">
 		<form id="nav-menu-meta" action="" class="nav-menu-meta" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="add-group" />
 			<?php wp_nonce_field( 'add-group', 'group-settings-column-nonce' ); ?>
-			<?php do_meta_boxes( 'group-organizer', 'side', null ); ?>
+			<?php if( $action == 'organize' )
+				do_meta_boxes( 'group-organizer', 'side', null ); 
+			?>
 		</form>
 	</div><!-- /#menu-settings-column -->
 	<div id="menu-management-liquid">
 		<div id="menu-management" class="nav-menus-php">
+
+			<div class="nav-tabs-wrapper">
+			<div class="nav-tabs">
+				<a href="<?php
+					echo esc_url( remove_query_arg( array(
+							'screen'
+					) ) );
+					?>" class="nav-tab <?php if( $action == 'organize' ) echo 'nav-tab-active'; ?>">
+					<?php printf( '<abbr title="%s">%s</abbr>', esc_html__( 'Drag and drop your groups', 'bp-group-hierarchy' ), __( 'Organize', 'bp-group-organizer' ) ); ?>
+				</a>
+				<a href="<?php
+					echo esc_url( add_query_arg( array(
+							'screen' => 'import'
+					) ) );
+					?>" class="nav-tab <?php if( $action == 'import' ) echo 'nav-tab-active'; ?>">
+					<?php printf( '<abbr title="%s">%s</abbr>', esc_html__( 'Import or export groups in bulk', 'bp-group-organizer' ), __( 'Import / Export', 'bp-group-organizer' ) ); ?>
+				</a>
+			</div>
+			</div>
+
+
 			<div class="menu-edit">
 				<form id="update-nav-menu" action="" method="post" enctype="multipart/form-data">
 					<div id="nav-menu-header">
@@ -299,7 +337,9 @@ function bp_group_organizer_admin_page() {
 									<span><?php _e('Group Organizer', 'bp-group-organizer'); ?></span>
 								</label>
 								<div class="publishing-action">
-									<?php submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_header' ) ); ?>
+									<?php if( $action == 'organize' )
+										submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_header' ) ); 
+									?>
 								</div><!-- END .publishing-action -->
 							</div><!-- END .major-publishing-actions -->
 						</div><!-- END #submitpost .submitbox -->
@@ -327,7 +367,9 @@ function bp_group_organizer_admin_page() {
 					<div id="nav-menu-footer">
 						<div class="major-publishing-actions">
 						<div class="publishing-action">
-							<?php submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_footer' ) ); ?>
+							<?php if( $action == 'organize' )
+								submit_button( __( 'Save Groups', 'bp-group-organizer' ), 'button-primary menu-save', 'save_menu', false, array( 'id' => 'save_menu_header' ) ); 
+							?>
 						</div>
 						</div>
 					</div><!-- /#nav-menu-footer -->
@@ -339,6 +381,75 @@ function bp_group_organizer_admin_page() {
 </div><!-- /.wrap-->
 
 <?php	
+}
+
+function bp_group_organizer_import_export_page() {
+	
+	ob_start();
+	?>
+	<h2><?php _e( 'Import', 'bp-group-organizer' ) ?></h2>
+	<form method="post">
+		<p>Import groups from a CSV file &mdash; see Help for details on the format.</p>
+		<input type="hidden" name="action" value="import" />
+		<?php wp_nonce_field( 'import', 'importnonce' ); ?>
+		<label for=""><?php _e( 'Import from File', 'bp-group-organizer' ) ?></label>
+		<input type="file" name="import_file" />
+		<br />
+		<label for=""><?php _e( 'Import from Text', 'bp-group-organizer' ) ?></label>
+		<textarea name="import_text"></textarea>
+		<?php submit_button( __( 'Import Groups', 'bp-group-hierarchy' ) ); ?>
+	</form>
+	
+	<h2><?php _e( 'Export', 'bp-group-organizer' ) ?></h2>
+	<form method="post">
+		<input type="hidden" name="action" value="export" />
+		<?php wp_nonce_field( 'export', 'exportnonce' ); ?>
+		<label for="organizer_export_format">Export Type</label>
+		<select name="export_format" id="organizer_export_format">
+			<option value="no_type" disabled="true" selected="true">Select a Type</option>
+			<option value="csv_slug">CSV (group slug, parent ID)</option>
+			<option value="csv_path">CSV (group path)</option>
+			<option value="sitemap">Sitemap XML</option>
+			<?php do_action( 'group_organizer_list_export_types' ); ?>
+		</select>
+		<?php submit_button( __( 'Export Groups', 'bp-group-hierarchy' ) ); ?>
+	</form>
+	<?
+	$result = ob_get_clean();
+	return $result;
+}
+
+/**
+ * Serve group export directly to browser
+ */
+function bp_group_organizer_handle_export() {
+
+	if( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'group_organizer' )
+		return false;
+
+	if( ! isset( $_REQUEST['action'] ) || $_REQUEST['action'] != 'export' )
+		return false;
+
+	include dirname(__FILE__) . '/includes/group-organizer-import.php';
+
+	switch( $_POST['export_format'] ) {
+		case 'csv_slug':
+			bp_group_organizer_export_csv('slug');
+			break;
+		case 'csv_path':
+			bp_group_organizer_export_csv('path');
+			break;
+		case 'sitemap':
+			bp_group_organizer_export_sitemap('xml');
+			break;
+		case 'no_type':
+			return false;
+			break;
+		default:
+			do_action( 'bp_group_organizer_export_' . $_POST['export_format'] );
+			break;
+	}
+	
 }
 
 function bp_organizer_delete_group() {

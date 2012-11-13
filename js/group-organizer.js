@@ -37,6 +37,9 @@ var wpNavMenu;
 				this.initSortables();
 
 			this.initToggles();
+			
+			// Fix for constant spinner on WP 3.5
+			$('img.waiting').hide();
 		},
 
 		jQueryExtensions : function() {
