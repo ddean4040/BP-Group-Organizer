@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/bp-group-organizer\n"
-"POT-Creation-Date: 2012-08-28 03:47:20+00:00\n"
+"POT-Creation-Date: 2012-11-17 20:21:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,36 +41,40 @@ msgid "Enable discussion forum"
 msgstr ""
 
 #: includes/group-meta-boxes.php:39
-msgid "Group Creator"
+msgid "Enable bbPress discussion forum"
 msgstr ""
 
 #: includes/group-meta-boxes.php:44
+msgid "Group Creator"
+msgstr ""
+
+#: includes/group-meta-boxes.php:49
 msgid "Group Hierarchy Options"
 msgstr ""
 
-#: includes/group-meta-boxes.php:47 includes/group-organizer.php:134
+#: includes/group-meta-boxes.php:52 includes/group-organizer.php:134
 msgid "Parent Group"
 msgstr ""
 
-#: includes/group-meta-boxes.php:50 includes/group-organizer.php:136
+#: includes/group-meta-boxes.php:55 includes/group-organizer.php:136
 msgid "Site Root"
 msgstr ""
 
-#: includes/group-meta-boxes.php:57
+#: includes/group-meta-boxes.php:62
 msgid ""
 "Your version of BuddyPress Group Hierarchy is too old to use with the "
 "organizer. Please upgrade to version <code>1.2.1</code> or higher."
 msgstr ""
 
-#: includes/group-meta-boxes.php:62
+#: includes/group-meta-boxes.php:67
 msgid "Create a group to add to your site."
 msgstr ""
 
-#: includes/group-meta-boxes.php:65
+#: includes/group-meta-boxes.php:69
 msgid "Add"
 msgstr ""
 
-#: includes/group-meta-boxes.php:70
+#: includes/group-meta-boxes.php:75
 msgid "Create a Group"
 msgstr ""
 
@@ -104,75 +108,217 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/group-organizer.php:203
+#: includes/group-organizer.php:202
 msgid "Add groups using the box to the left, or arrange groups below."
 msgstr ""
 
-#: includes/group-organizer.php:207
+#: includes/group-organizer.php:206
 msgid "No groups were found."
 msgstr ""
 
-#: includes/group-organizer.php:217
+#: includes/group-organizer.php:216
 msgid "The Walker class named <strong>%s</strong> does not exist."
 msgstr ""
 
-#: index.php:26 index.php:226 index.php:248
+#: index.php:28 index.php:30 index.php:325 index.php:372
 msgid "Group Organizer"
 msgstr ""
 
-#: index.php:65
+#: index.php:28
+msgid "Organizer"
+msgstr ""
+
+#: index.php:71
 msgctxt "search results"
 msgid "No results found."
 msgstr ""
 
-#: index.php:66
+#: index.php:72
 msgid ""
 "You are about to permanently delete this group. \n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: index.php:67
+#: index.php:73
 msgid "Group was deleted successfully."
 msgstr ""
 
-#: index.php:68
+#: index.php:74
 msgid "Group could not be deleted."
 msgstr ""
 
-#: index.php:69
+#: index.php:75
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: index.php:90
+#: index.php:95
 msgid "Cheatin&#8217; uh?"
 msgstr ""
 
-#: index.php:118
+#: index.php:125
 msgid ""
 "The group slug you specified was unavailable or invalid. This group was "
 "created with the slug: <code>%s</code>."
 msgstr ""
 
-#: index.php:125
+#: index.php:129
+msgid ""
+"Group could not be created because one or more required fields were not "
+"filled in"
+msgstr ""
+
+#: index.php:140
 msgid "Group was not successfully created."
 msgstr ""
 
-#: index.php:127
+#: index.php:142
 msgid "Group was created successfully."
 msgstr ""
 
-#: index.php:251 index.php:279
+#: index.php:281
+msgid "File uploaded successfully, but there is a problem. (%d)"
+msgstr ""
+
+#: index.php:282
+msgid "File exceeded PHP's maximum upload size. (%d)"
+msgstr ""
+
+#: index.php:283
+msgid "File exceeded the form's maximum upload size. (%d)"
+msgstr ""
+
+#: index.php:284
+msgid "File was only partially uploaded. (%d)"
+msgstr ""
+
+#: index.php:285
+msgid "No uploaded file was found. (%d)"
+msgstr ""
+
+#: index.php:286
+msgid "No temporary folder could be found for the uploaded file. (%d)"
+msgstr ""
+
+#: index.php:287
+msgid "Could not write uploaded file to disk. (%d)"
+msgstr ""
+
+#: index.php:288
+msgid "Upload was stopped by a PHP extension. (%d)"
+msgstr ""
+
+#: index.php:351
+msgid "Drag and drop your groups"
+msgstr ""
+
+#: index.php:351
+msgid "Organize"
+msgstr ""
+
+#: index.php:358
+msgid "Import or export groups in bulk"
+msgstr ""
+
+#: index.php:358
+msgid "Import / Export"
+msgstr ""
+
+#: index.php:376 index.php:406
 msgid "Save Groups"
 msgstr ""
 
-#: index.php:270
+#: index.php:396
 msgid "You don't yet have any groups."
 msgstr ""
 
-#: index.php:297
+#: index.php:427
+msgid "Import"
+msgstr ""
+
+#: index.php:429
+msgid "Import groups from a CSV file &mdash; see %s for details on the format."
+msgstr ""
+
+#: index.php:429 index.php:440
+msgid "Notes"
+msgstr ""
+
+#: index.php:432
+msgid "Import from File"
+msgstr ""
+
+#: index.php:436
+msgid "Import Options"
+msgstr ""
+
+#: index.php:437
+msgid "Continue import even if some groups cannot be created"
+msgstr ""
+
+#: index.php:442
+msgid "CSV files may supply any of these fields: %s"
+msgstr ""
+
+#: index.php:443
+msgid "CSV files must have ONE of these fields: %s or %s"
+msgstr ""
+
+#: index.php:444
+msgid ""
+"If you are trying to recreate a hierarchy, CSV files must have either %s or "
+"all of %s"
+msgstr ""
+
+#: index.php:445
+msgid ""
+"If a group slug is taken, a new one will be chosen by BuddyPress. This is "
+"not currently configurable."
+msgstr ""
+
+#: index.php:447
+msgid "Import Groups"
+msgstr ""
+
+#: index.php:450
+msgid "Export"
+msgstr ""
+
+#: index.php:454
+msgid "Export Format"
+msgstr ""
+
+#: index.php:456
+msgid "Select a Format"
+msgstr ""
+
+#: index.php:457 index.php:458
+msgid "CSV (%s)"
+msgstr ""
+
+#: index.php:457
+msgid "group ID"
+msgstr ""
+
+#: index.php:457
+msgid "group slug"
+msgstr ""
+
+#: index.php:457
+msgid "parent ID"
+msgstr ""
+
+#: index.php:458
+msgid "group path"
+msgstr ""
+
+#: index.php:461
+msgid "Export Groups"
+msgstr ""
+
+#: index.php:507
 msgid "Only administrators can delete groups with the organizer."
 msgstr ""
 
-#: index.php:305
+#: index.php:515
 msgid "Group delete failed."
 msgstr ""
