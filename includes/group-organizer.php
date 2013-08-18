@@ -116,6 +116,13 @@ class Walker_Group_Edit extends Walker_Group  {
 						<input type="checkbox" id="group-forum-enabled-<?php echo $item_id; ?>" class="widefat edit-menu-item-classes" name="group[<?php echo $item_id; ?>][forum_enabled]" <?php checked($item->enable_forum) ?> />
 					</label>
 				</p>
+				<?php elseif ( function_exists('bbp_is_group_forums_active') && bbp_is_group_forums_active() ) : ?>
+				<p class="field-css-classes description description-wide">
+					<label for="group-forum-enabled-<?php echo $item_id; ?>">
+						<?php _e('Enable bbPress discussion forum', 'bp-group-organizer'); ?><br />
+						<input type="checkbox" id="group-forum-enabled-<?php echo $item_id; ?>" class="widefat edit-menu-item-classes" name="group[<?php echo $item_id; ?>][forum_enabled]" <?php checked($item->enable_forum) ?> />
+					</label>
+				</p>
 				<?php endif; ?>
 				<p class="field-link-target description description-thin">
 					<label for="group-status-<?php echo $item_id; ?>">

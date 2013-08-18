@@ -40,6 +40,9 @@ No questions yet.
 
 == Changelog ==
 
+= 1.0.8 =
+* Fixed: saving groups would disabled bbPress-integrated forums - thanks, grima
+
 = 1.0.7 =
 * Fixed: short open tag introduced in 1.0.6 - thanks, nfocom
 
