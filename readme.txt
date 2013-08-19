@@ -3,8 +3,10 @@ Contributors: ddean
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6BKDCMJRYPKNN&lc=US&item_name=BP%20Group%20Organizer&currency_code=USD
 Tags: buddypress, group, groups, edit, organize, move, drag and drop
 Requires at least: 3.1
-Tested up to: 3.5
-Stable tag: 1.0.7
+Tested up to: 3.6
+Stable tag: 1.0.8
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Easily create, edit, and delete BuddyPress groups - with drag and drop simplicity
 
@@ -18,7 +20,9 @@ Based on the WordPress Menu editor, BP Group Organizer makes it simple to get yo
 * Edit multiple groups and group properties without waiting for page reloads
 * Delete unwanted groups in a flash
 
-For users of BP Group Hierarchy, this plugin also allows you to move groups around the hierarchy by dragging and dropping. Get your groups just the way you want them, quickly and easily.
+= Goes great with BP Group Hierarchy =
+
+For users of <a href="http://wordpress.org/plugins/bp-group-hierarchy/">BP Group Hierarchy</a>, this plugin also allows you to move groups around the hierarchy by dragging and dropping. Get your groups just the way you want them, quickly and easily.
 
 == Installation ==
 
@@ -32,7 +36,10 @@ For users of BP Group Hierarchy, this plugin also allows you to move groups arou
 
 == Frequently Asked Questions ==
 
-No questions yet.
+= Why are my drag and drop changes not saved? =
+
+1. Dragging and dropping is only meaningful on installs running BP Group Hierarchy, since this plugin does not enable subgroups in BuddyPress.
+1. There is no explicit "order" to BuddyPress groups. Changes made by dragging groups up or down at the same level are not saved.
 
 == Screenshots ==
 
@@ -83,6 +90,9 @@ No questions yet.
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.8 =
+Fix bug that disabled bbPress integrated forums when saving groups - all users should upgrade
 
 = 1.0.6 =
 Import / export group structure, other updates
