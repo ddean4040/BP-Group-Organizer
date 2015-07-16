@@ -14,7 +14,7 @@ class Walker_Group_Edit extends Walker_Group  {
 	 *
 	 * @param string $output Passed by reference.
 	 */
-	function start_lvl(&$output) {}
+	function start_lvl(&$output, $depth=0, $args=array()) {}
 
 	/**
 	 * @see Walker_Nav_Menu::end_lvl()
@@ -22,7 +22,7 @@ class Walker_Group_Edit extends Walker_Group  {
 	 *
 	 * @param string $output Passed by reference.
 	 */
-	function end_lvl(&$output) {
+	function end_lvl(&$output, $depth=0, $args=array()) {
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Walker_Group_Edit extends Walker_Group  {
 	 * @param int $depth Depth of menu item. Used for padding.
 	 * @param object $args
 	 */
-	function start_el(&$output, $item, $depth, $args) {
+	function start_el(&$output, $item, $depth=0, $args=array(), $current_object_id = 0) {
 		global $_wp_nav_menu_max_depth, $bp, $groups_template;
 		$_wp_nav_menu_max_depth = $depth > $_wp_nav_menu_max_depth ? $depth : $_wp_nav_menu_max_depth;
 
@@ -60,7 +60,7 @@ class Walker_Group_Edit extends Walker_Group  {
 		$groups_template->group = $item;
 
 		$title = $item->name;
-		
+
 		if ( isset( $item->status ) && 'private' == $item->status ) {
 			$classes[] = 'status-private';
 			/* translators: %s: title of private group */
@@ -74,7 +74,7 @@ class Walker_Group_Edit extends Walker_Group  {
 		if(defined( 'BP_GROUP_HIERARCHY_IS_INSTALLED' ) && method_exists('BP_Groups_Hierarchy','get_tree')) {
 			$all_groups = BP_Groups_Hierarchy::get_tree();
 		}
-		
+
 		?>
 		<li id="menu-item-<?php echo $item_id; ?>" class="<?php echo implode(' ', $classes ); ?>">
 			<dl class="menu-item-bar">
@@ -134,7 +134,7 @@ class Walker_Group_Edit extends Walker_Group  {
 						</select>
 					</label>
 				</p>
-				
+
 				<?php if(defined('BP_GROUP_HIERARCHY_IS_INSTALLED') && method_exists('BP_Groups_Hierarchy','get_tree')) : ?>
 				<p class="field-xfn description description-thin">
 					<label for="group-parent-id-<?php echo $item_id; ?>">
@@ -148,9 +148,9 @@ class Walker_Group_Edit extends Walker_Group  {
 					</label>
 				</p>
 				<?php endif; ?>
-				
+
 				<?php do_action( 'bp_group_organizer_display_group_options' , $item ); ?>
-				
+
 				<div class="menu-item-actions description-wide submitbox">
 					<p class="link-to-original">
 						<?php printf( __( 'Link: %s', 'bp-group-organizer' ), '<a href="' . bp_get_group_permalink() . '">' . esc_html( stripslashes( $item->name ) ) . '</a>' ); ?>
@@ -184,7 +184,7 @@ class Walker_Group_Edit extends Walker_Group  {
 
 /**
  * Returns the menu formatted to edit.
- * 
+ *
  * @return string|WP_Error $output The menu formatted to edit or error object on failure.
  */
 function bp_get_groups_to_edit() {
@@ -193,7 +193,7 @@ function bp_get_groups_to_edit() {
 //	$groups_list = groups_get_groups(array(
 //		'per_page'	=> groups_get_total_group_count()
 //	));
-	
+
 	if( bpgo_is_hierarchy_available() ) {
 		$groups_list = array(
 			'groups' => BP_Groups_Hierarchy::get_tree()
@@ -202,7 +202,7 @@ function bp_get_groups_to_edit() {
 	} else {
 		$groups_list = BP_Groups_Group::get( 'alphabetical' );
 	}
-	
+
 
 	$result = '<div id="menu-instructions" class="post-body-plain';
 	$result .= ( ! empty($menu_items) ) ? ' menu-instructions-inactive">' : '">';
@@ -227,7 +227,7 @@ function bp_get_groups_to_edit() {
 		$result .= ' </ul> ';
 		return $result;
 	}
-	
+
 }
 
 ?>
