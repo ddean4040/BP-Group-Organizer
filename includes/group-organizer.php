@@ -57,6 +57,9 @@ class Walker_Group_Edit extends Walker_Group  {
 		);
 
 		/** Set global $groups_template to current group so we can use BP groups template functions */
+		if (!is_object($groups_template)) {
+			$groups_template = new BP_Groups_Template();
+		}
 		$groups_template->group = $item;
 
 		$title = $item->name;
