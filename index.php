@@ -221,11 +221,13 @@ function bp_group_organizer_admin_page() {
 					// if group hierarchy is installed and available, check for tree changes
 	
 					$group_hierarchy = new BP_Groups_Hierarchy( $id );
-	
-					if( $parent_ids[$id] !== null && $group_hierarchy->parent_id != $parent_ids[$id] ) {
-						$group_hierarchy->parent_id = $parent_ids[$id];
+
+					if( $parent_ids[$id] !== null && $group_hierarchy->parent_id != intVal($parent_ids[$id] )) {
+						$group_hierarchy->parent_id = intVal($parent_ids[$id]);
+						$group_reference->parent_id = intVal($parent_ids[$id]);
 						$group_hierarchy->save();
-					} else if($group_hierarchy->parent_id != $group['parent_id']) {
+					} else if($group_hierarchy->parent_id != intVal($group['parent_id'])) {
+						$group_reference->parent_id = $group['parent_id'];
 						$group_hierarchy->parent_id = $group['parent_id'];
 						$group_hierarchy->save();
 					}
